@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, func, Boolean
 from sqlalchemy.ext.declarative import declarative_base
-from connection import create_db_session
+from backoffice.connection import create_db_session
 
 Base = declarative_base()
 
