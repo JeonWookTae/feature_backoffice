@@ -52,5 +52,3 @@ if __name__ == '__main__':
     account = Accounts.of('전욱태', 'wooktae2', '1234', 'wook@gmail.com', '010-2515-8129')
     session.add(account)
     session.commit()
-
-
