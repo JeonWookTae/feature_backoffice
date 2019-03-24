@@ -28,6 +28,11 @@ class Accounts(Base):
         ob.active = True
         return ob
 
+    def to_json(self):
+        return {"user_no": self.user_no,
+                "user_id": self.user_id,
+                "user_email": self.user_email}
+
 
 if __name__ == '__main__':
     session = create_db_session()
