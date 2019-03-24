@@ -1,42 +1,7 @@
-from backoffice.domain.model import Accounts
+from flask_login import login_user
+
+from backoffice.domain.model import Accounts, User
 from backoffice.connection import get_session
-
-
-class User(object):
-    user_no: int
-    user_id: str
-    user_name: str
-    avatar = str
-    user_dept: str
-    user_email: str
-    user_phone: str
-    #is_active: bool
-
-    def __init__(self, acc: Accounts):
-        self.user_no = acc.user_no
-        self.user_id = acc.user_id
-        self.user_name = acc.user_name
-        self.user_email = acc.user_email
-        self.user_phone = acc.user_phone
-        self.created_at = acc.create_at
-        #self.is_active = acc.active
-        self.password = acc.user_password
-        self.authenticated = False
-
-    def can_login(self, passwd_hash):
-        return self.password == passwd_hash
-
-    def is_active(self):
-        return True
-
-    def get_id(self):
-        return self.user_id
-
-    def is_authenticated(self):
-        return self.authenticated
-
-    def is_anonymous(self):
-        return False
 
 
 def sing_up(user):
@@ -57,9 +22,32 @@ def user_load(login):
     with get_session() as session:
         our_user = session.query(Accounts).filter_by(user_id=login_id, user_password=login_password).first()
         if our_user:
-            return User(our_user)
+            return User.of(our_user)
         else:
             return None
+
+
+def user_id_load(login):
+    login_id = login
+    with get_session() as session:
+        our_user = session.query(Accounts).filter_by(user_id=login_id).first()
+        if our_user:
+            return User.of(our_user)
+        else:
+            return None
+
+
+def user_login_valid_check(user_id, user_password):
+    login_result = user_id_load(user_id)
+    if login_result:
+        login_result.authenticated = True
+        login_user(login_result, remember=True)
+        json_result = {"ok": True, 'msg': 'success'}
+    elif login_result.can_login(password=user_password):
+        json_result = {"ok": False, 'msg': 'Invalid user_id or password'}
+    else:
+        json_result = {"ok": False, 'msg': 'Invalid user_id or password'}
+    return json_result
 
 
 if __name__ == '__main__':
