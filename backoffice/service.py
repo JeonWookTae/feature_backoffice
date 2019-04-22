@@ -6,7 +6,7 @@ from backoffice.connection import get_session
 
 
 def unauthorized_return():
-    return jsonify({'ok': 400, 'msg': 'unauthorized'})
+    return jsonify({'ok': 404, 'msg': 'unauthorized'})
 
 
 def sing_up(user):
