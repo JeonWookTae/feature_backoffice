@@ -39,8 +39,8 @@ def create_login(app):
         logout_user()
         return jsonify({"ok": 200, 'msg': 'success'})
 
-    @login_bf.route('/authenticate', methods=['GET'])
     @login_required
+    @login_bf.route('/authenticate', methods=['GET'])
     def authenticate():
         json_res = {'ok': 200, 'msg': 'authenticate success'}
         return jsonify(json_res)

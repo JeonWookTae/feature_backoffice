@@ -43,22 +43,25 @@ def user_id_load(login):
 
 
 def user_authenticated(login_result, result_bool):
-    login_result.authenticated = result_bool
-    login_user(login_result, remember=result_bool)
+    if login_result:
+        login_result.authenticated = result_bool
+        login_user(login_result, remember=result_bool)
 
 
 def user_id_valid_check(login_result: User):
     if login_result:
         user_authenticated(login_result, True)
         return {"ok": 200, "msg": "success"}
+    user_authenticated(login_result, False)
     return {"ok": 401, "msg": "Invalid user_id or password"}
 
 
 def user_password_valid_check(login_result: User, user_password):
     if login_result.can_login(user_password):
-        user_authenticated(login_result, False)
-        return {"ok": 402, "msg": "Invalid password"}
-    return {"ok": 200, "msg": "success"}
+        user_authenticated(login_result, True)
+        return {"ok": 200, "msg": "success"}
+    user_authenticated(login_result, False)
+    return {"ok": 402, "msg": "Invalid password"}
 
 
 def user_login_valid_check(user_id, user_password):
@@ -66,6 +69,7 @@ def user_login_valid_check(user_id, user_password):
     valid = user_id_valid_check(login_result)
     if valid.get("ok") == 200:
         valid = user_password_valid_check(login_result, user_password)
+        print(valid)
     return valid
 
 
