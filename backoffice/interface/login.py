@@ -2,15 +2,21 @@ from backoffice.service import user_id_load, user_login_valid_check, unauthorize
 
 import os
 from flask_login import LoginManager, logout_user, login_required, current_user, login_user
+from flask_cache import Cache
 from flask import Blueprint, request, jsonify
+
+
+def create_secret_key():
+    return os.urandom(24)
 
 
 def create_login(app):
     login_bf = Blueprint('login_api', __name__)
-    app.secret_key = os.urandom(24)
+    app.secret_key = b'#t\xd5\x90\x97\xfd~A\x94bc(p\x89\x10\xd3\xd6\xc1\xa0\xb4\xa8\n,\xb8'
     login_manager = LoginManager()
     login_manager.unauthorized_handler(unauthorized_return)
     login_manager.init_app(app)
+    # cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
     @login_manager.user_loader
     def load_user(user_id):

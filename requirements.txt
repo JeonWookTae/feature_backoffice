@@ -2,3 +2,4 @@ SQLAlchemy >= 1.2.9
 Flask==1.0.2
 requests == 2.19.1
 Flask-Login == 0.4.1
+Flask-Cache == 0.13.1
